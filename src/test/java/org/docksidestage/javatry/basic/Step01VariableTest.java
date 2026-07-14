@@ -47,7 +47,10 @@ public class Step01VariableTest extends PlainTestCase {
         String piari = null;
         String dstore = "mai";
         sea = sea + land + piari + ":" + dstore;
-        log(sea); // your answer? => 
+        log(sea); // your answer? => mystic8:mai(x) -> mystic8null:mai(o)
+        // 定義を見ていいのを忘れていた
+        // 定義をざっと見ると、おおよそ `.toString()` で文字列に変換される
+        // `log` では `null` は null という文字列が出力される
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -56,7 +59,9 @@ public class Step01VariableTest extends PlainTestCase {
         String land = "oneman";
         sea = land;
         land = land + "'s dreams";
-        log(sea); // your answer? => 
+        log(sea); // your answer? => oneman's dreams(x) -> oneman(o)
+        // コードをちゃんと読んでいなかった
+        // 確かに IDEA の変数の表示が違うのもあって気づくべきだった
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -65,7 +70,7 @@ public class Step01VariableTest extends PlainTestCase {
         int land = 415;
         sea = land;
         land++;
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 415
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -75,7 +80,7 @@ public class Step01VariableTest extends PlainTestCase {
         sea = land;
         sea = land.add(new BigDecimal(1));
         sea.add(new BigDecimal(1));
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 416(o)
     }
 
     // ===================================================================================
@@ -89,19 +94,26 @@ public class Step01VariableTest extends PlainTestCase {
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_variable_instance_variable_default_String() {
         String sea = instanceBroadway;
-        log(sea); // your answer? => 
+        log(sea); // your answer? => (x) -> null(o)
+        // 言い訳すると真面目にオブジェクト指向の言語を書くのが久しぶりで細かいルールを本当に覚えていない
+        // 初期化せずに変数宣言するとデフォルトコンストラクタが呼ばれるかと思ったがそれは C++ だった (By ChatGPT)
+        // Java では初期化せずに変数宣言すると null になるらしい
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_variable_instance_variable_default_int() {
         int sea = instanceDockside;
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 0(o)
+        // これはわかる
+        // プリミティブな型だから初期値が決まっていて int は 0
+        // ただし、ローカル変数の場合は未代入の変数の利用がコンパイルエラー (By ChatGPT)
+        // Swift も未初期化の変数は利用不可 (By ChatGPT)
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_variable_instance_variable_default_Integer() {
         Integer sea = instanceHangar;
-        log(sea); // your answer? => 
+        log(sea); // your answer? => null(o)
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -110,7 +122,9 @@ public class Step01VariableTest extends PlainTestCase {
         instanceMagiclamp = "magician";
         helpInstanceVariableViaMethod(instanceMagiclamp);
         String sea = instanceBroadway + "|" + instanceDockside + "|" + instanceHangar + "|" + instanceMagiclamp;
-        log(sea); // your answer? => 
+        log(sea); // your answer? => bigband|1|null|burn(x) -> bigband|1|null|magician
+        // オブジェクト変数を渡すのでオブジェクトの持っている値が上書きされると考えてしまった。
+        // ChatGPT に見てもらったところ、ローカル変数が指すオブジェクト自体を上書きしているため、実引数が指すオブジェクトには影響されない
     }
 
     private void helpInstanceVariableViaMethod(String instanceMagiclamp) {
@@ -130,7 +144,7 @@ public class Step01VariableTest extends PlainTestCase {
         String sea = "harbor";
         int land = 415;
         helpMethodArgumentImmutableMethodcall(sea, land);
-        log(sea); // your answer? => 
+        log(sea); // your answer? => harbor(o)
     }
 
     private void helpMethodArgumentImmutableMethodcall(String sea, int land) {
@@ -147,7 +161,7 @@ public class Step01VariableTest extends PlainTestCase {
         StringBuilder sea = new StringBuilder("harbor");
         int land = 415;
         helpMethodArgumentMethodcall(sea, land);
-        log(sea); // your answer? => 
+        log(sea); // your answer? => harbor416(o)
     }
 
     private void helpMethodArgumentMethodcall(StringBuilder sea, int land) {
@@ -163,7 +177,7 @@ public class Step01VariableTest extends PlainTestCase {
         StringBuilder sea = new StringBuilder("harbor");
         int land = 415;
         helpMethodArgumentVariable(sea, land);
-        log(sea); // your answer? => 
+        log(sea); // your answer? => harbor(o)
     }
 
     private void helpMethodArgumentVariable(StringBuilder sea, int land) {
@@ -193,7 +207,14 @@ public class Step01VariableTest extends PlainTestCase {
      */
     public void test_variable_writing() {
         // define variables here
+        String sea = "mystic";
+        Integer land = null;
+        log(sea, land, piari);
     }
+    int piari;
+    // インスタンス変数という呼び名に親しみがなく、一瞬わからなかった
+    // フィールド、もっと言えばインスタンスフィールドという言い方もできるらしい (By ChatGPT)
+    // クラス変数という言い方も割と自分は使っていたが、スタティック変数に対して使うべきらしい(By ChatGPT)
 
     // ===================================================================================
     //                                                                           Good Luck
@@ -204,11 +225,20 @@ public class Step01VariableTest extends PlainTestCase {
      * <pre>
      * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
      * your question here (ここにあなたの質問を):
-     * 
+     * boolean / double / char によりそれぞれ false / 0.25 / 'a' を初期値として宣言し、
+     * ラッパー型に代入して log() でカンマ区切りの文字列で表示
      * _/_/_/_/_/_/_/_/_/_/
      * </pre>
      */
     public void test_variable_yourExercise() {
         // write your code here
+        boolean flag = false;
+        double d = 0.25;
+        char c = 'a';
+
+        Boolean flagWrapper = flag;
+        Double dWrapper = d;
+        Character cWrapper = c;
+        log(flagWrapper, dWrapper, cWrapper);
     }
 }
