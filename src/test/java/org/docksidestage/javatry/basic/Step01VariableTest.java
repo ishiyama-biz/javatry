@@ -51,17 +51,33 @@ public class Step01VariableTest extends PlainTestCase {
         // 定義を見ていいのを忘れていた
         // 定義をざっと見ると、おおよそ `.toString()` で文字列に変換される
         // `log` では `null` は null という文字列が出力される
+        // #1on1: String以外のクラスをStringと+すると、Stringに引き摺り込まれる (2026/07/27)
+        // そのとき、toString()が呼ばれる。
+        // ↑log()の中でtoString()が呼ばれると思っていた by いしやまさん
+        // ↑log()の前に+の処理は終わっているので、このエクササイズとは直接は関係ないけど、log()まで見てるのは素晴らしい。
+        // toString()は、Object型で宣言されていて、すべてのクラスが継承している。
+        // #1on1: "null" という文字列になるのは、プログラミング言語の決め (2026/07/27) 
+        // Pythonだとどうだっけ？ → ぐぐると、エラーになるっぽい。
+        // C#だと、空文字になる。
+        // それぞれ、メリデメ。
+        // 安全性ではエラーになるほうがいい。
+        // 多少楽に実装するって面では素通りがいい。
+        // "null" だと、本番で画面にnullって出てきやすい、一方で開発時は不具合がわかりやすい。
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_variable_reassigned_basic() {
-        String sea = "mystic";
-        String land = "oneman";
+        String sea = "mystic"; // 1(mystic)
+        String land = "oneman"; // 2(oneman)
         sea = land;
-        land = land + "'s dreams";
+        land = land + "'s dreams"; // 3("'s dreams"), 4(oneman's dreams)
         log(sea); // your answer? => oneman's dreams(x) -> oneman(o)
         // コードをちゃんと読んでいなかった
         // 確かに IDEA の変数の表示が違うのもあって気づくべきだった
+        // #1on1: インスタンスとは？ (2026/07/27)
+        // クラスについて具体的に...メモリ上に置いたもの by いしやまさん
+        // 一軒家の例。
+        // BigDecimalのエクササイズにもつなげてみた。
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -75,12 +91,29 @@ public class Step01VariableTest extends PlainTestCase {
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_variable_reassigned_BigDecimal() {
-        BigDecimal sea = new BigDecimal(94);
-        BigDecimal land = new BigDecimal(415);
+        BigDecimal sea = new BigDecimal(94); // 1(94)
+        BigDecimal land = new BigDecimal(415); // 2(415)
         sea = land;
-        sea = land.add(new BigDecimal(1));
-        sea.add(new BigDecimal(1));
+        sea = land.add(new BigDecimal(1)); // 3(1), 4(416)
+        sea.add(new BigDecimal(1)); // 5(1), 6(417)
         log(sea); // your answer? => 416(o)
+
+        // #1on1: インスタンスエクササイズ (2026/07/27)
+        // 416は2(415)
+        // add()は、自分自身を変えて、それを戻すものと思った!? by いしやまさん
+        // add()のJavaDoc見てみた。add()のソースコードリーディングしてみた。
+        // #1on1: immutableとは？ (2026/07/27)
+        // Javaだと自作immutableが基本。(recordという新しい文法も少しあるけど汎用的ではない)
+        // immutableのクラスのメリデメ:
+        // o メリット: 変更箇所を追いやすい、可読性。from 安全性。
+        // o デメリット: 若干設計が複雑になりやすい印象、インスタンス多いのでメモリ。
+        // immutableの歴史(Java):
+        // コンピューターの都合から人間の都合に。
+        // Javaの場合、過去の経緯もあるし、コンセプトもあってか、バランス主義な印象。
+        // 一方で、100%immutable推しの文化もある。
+
+        // TODO ishiyama [読み物課題] 応援してる "A" にもデメリットはあるよ by jflute (2026/07/27)
+        // https://jflute.hatenadiary.jp/entry/20181008/yourademerit
     }
 
     // ===================================================================================
@@ -125,6 +158,8 @@ public class Step01VariableTest extends PlainTestCase {
         log(sea); // your answer? => bigband|1|null|burn(x) -> bigband|1|null|magician
         // オブジェクト変数を渡すのでオブジェクトの持っている値が上書きされると考えてしまった。
         // ChatGPT に見てもらったところ、ローカル変数が指すオブジェクト自体を上書きしているため、実引数が指すオブジェクトには影響されない
+        // #1on1: 少なくともJavaでは、変数そのものが引数で渡されることはない (2026/07/27)
+        // 必ず、呼び出し側で中身を取り出して(参照)、それを引数変数に代入して渡す。
     }
 
     private void helpInstanceVariableViaMethod(String instanceMagiclamp) {
@@ -211,10 +246,13 @@ public class Step01VariableTest extends PlainTestCase {
         Integer land = null;
         log(sea, land, piari);
     }
+
     int piari;
     // インスタンス変数という呼び名に親しみがなく、一瞬わからなかった
     // フィールド、もっと言えばインスタンスフィールドという言い方もできるらしい (By ChatGPT)
     // クラス変数という言い方も割と自分は使っていたが、スタティック変数に対して使うべきらしい(By ChatGPT)
+    // #1on1: インスタンス変数 == インスタンスフィールド にありー== メンバー変数 (2026/07/27)
+    // 文法用語も大事だけど、文法用語が流行らないケースもある。
 
     // ===================================================================================
     //                                                                           Good Luck
