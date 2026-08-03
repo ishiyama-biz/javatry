@@ -52,7 +52,7 @@ public class Step02IfForTest extends PlainTestCase {
         } else {
             sea = 7;
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 7(o)
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -67,30 +67,30 @@ public class Step02IfForTest extends PlainTestCase {
         } else {
             sea = 9;
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 7(o)
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_if_elseif_nested() {
         boolean land = false;
         int sea = 904;
-        if (sea > 904) {
+        if (sea > 904) { // false
             sea = 2001;
             sea = sea++ * 2;
-        } else if (land && sea >= 904) {
+        } else if (land && sea >= 904) { // false
             sea = 7;
             sea = ++sea * 2;
-        } else if (sea >= 903 || land) {
-            if (sea % 2 == 0) {
-                sea = sea++ * 2;
+        } else if (sea >= 903 || land) { // true
+            if (sea % 2 == 0) { // true
+                sea = sea++ * 2; // sea : 1808
             }
-            if (!land) {
-                land = true;
+            if (!land) { // true
+                land = true; // land : true
             } else if (sea <= 903) {
                 sea++;
             }
-            if (sea < 1810) {
-                sea = 8;
+            if (sea < 1810) { // true
+                sea = 8; // sea : 8
             }
         } else if (sea == 8) {
             sea++;
@@ -98,16 +98,24 @@ public class Step02IfForTest extends PlainTestCase {
         } else {
             sea = 9;
         }
-        if (sea >= 9 || (sea > 7 && sea < 9)) {
+        if (sea >= 9 || (sea > 7 && sea < 9)) { // false
             sea--;
             if (sea % 2 == 1) {
                 sea++;
             }
         }
-        if (land) {
+        if (land) { // true
             sea = 10;
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 10(o)
+        // 確か C とかでは `sea=sea++ * 2` みたいな書き方はできなかった気がする
+        // C では未定義動作らしい by ChatGPT
+        // 多分一時期未定義動作のコンパイルを弾いていたために勘違いした
+        // Java では値を参照した後インクリメントされた値が追加され、その後で右辺が計算されて左辺に代入されるらしい by ChatGPT
+        // Kotlin や Go は インクリメントされた変数を式として使えないらしい by ChatGPT
+        // Python や Swift ではインクリメント自体がないらしい by ChatGPT
+        // Python についてはそういえばそんなのを勉強した気がする
+        // 未定義動作なのは C くらいなのか
     }
 
     // ===================================================================================
@@ -115,7 +123,7 @@ public class Step02IfForTest extends PlainTestCase {
     //                                                                       =============
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_for_inti_basic() {
-        List<String> stageList = prepareStageList();
+        List<String> stageList = prepareStageList(); // ["broadway", "dockside", "hangar", "magiclamp"]
         String sea = null;
         for (int i = 0; i < stageList.size(); i++) {
             String stage = stageList.get(i);
@@ -123,22 +131,22 @@ public class Step02IfForTest extends PlainTestCase {
                 sea = stage;
             }
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => dockside(o)
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_for_foreach_basic() {
-        List<String> stageList = prepareStageList();
+        List<String> stageList = prepareStageList(); // ["broadway", "dockside", "hangar", "magiclamp"]
         String sea = null;
         for (String stage : stageList) {
             sea = stage;
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => magiclamp(o)
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_for_foreach_continueBreak() {
-        List<String> stageList = prepareStageList();
+        List<String> stageList = prepareStageList(); // ["broadway", "dockside", "hangar", "magiclamp"]
         String sea = null;
         for (String stage : stageList) {
             if (stage.startsWith("br")) {
@@ -149,12 +157,12 @@ public class Step02IfForTest extends PlainTestCase {
                 break;
             }
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => hangar(o)
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_for_listforeach_basic() {
-        List<String> stageList = prepareStageList();
+        List<String> stageList = prepareStageList(); // ["broadway", "dockside", "hangar", "magiclamp"]
         StringBuilder sb = new StringBuilder();
         stageList.forEach(stage -> {
             if (sb.length() > 0) {
@@ -165,7 +173,16 @@ public class Step02IfForTest extends PlainTestCase {
             }
         });
         String sea = sb.toString();
-        log(sea); // your answer? => 
+        log(sea); // your answer? => dockside(o)
+        // -> ってなんの記法だったっけ？ Lambda だっけ？ (Java に Lambda ってないんじゃなかったけ？）
+        // Lambda 式で、 Java 8 (2014年) からあるらしい by ChatGPT
+        // それまでは匿名クラスで書いていたらしい by ChatGPT
+        // 匿名クラスも見たことはあるくらい
+        // 流石にオブジェクト指向として書くとしても匿名クラスは書くのが大変だな
+        // Java 8 ってたまに聞く気がするな
+        // Lambda 関数って呼ぶと間違いらしい by ChatGPT
+        // 多分元は匿名クラスで書いていたものを関数型インターフェースとして書くことができるようにしたために Lambda 式と呼ぶことになったのだろう
+        // おおよそ Lambda 式は匿名クラスの代わりになるが、 this の扱いなどが異なり、単純に変換されているものでもないらしい by ChatGPT
     }
 
     // ===================================================================================
@@ -177,6 +194,16 @@ public class Step02IfForTest extends PlainTestCase {
      */
     public void test_iffor_making() {
         // write if-for here
+        List<String> stageList = prepareStageList(); // ["broadway", "dockside", "hangar", "magiclamp"]
+        List<String> aList = new ArrayList<>();
+        for (String stage : stageList) {
+            if (stage.contains("a")) {
+                aList.add(stage);
+            }
+        }
+        for (String stage : aList) {
+            log(stage);
+        }
     }
 
     // ===================================================================================
@@ -189,17 +216,29 @@ public class Step02IfForTest extends PlainTestCase {
     public void test_iffor_refactor_foreach_to_forEach() {
         List<String> stageList = prepareStageList();
         String sea = null;
-        for (String stage : stageList) {
+    //    for (String stage : stageList) {
+    //        if (stage.startsWith("br")) {
+    //            continue;
+    //        }
+    //        sea = stage;
+    //        if (stage.contains("ga")) {
+    //            break;
+    //        }
+    //    }
+    //    log(sea); // should be same as before-fix
+        stageList.forEach(stage -> {
             if (stage.startsWith("br")) {
-                continue;
+                return;
             }
-            sea = stage;
             if (stage.contains("ga")) {
-                break;
+                log(stage);
+                return;
             }
-        }
-        log(sea); // should be same as before-fix
+        });
+        // hangar
     }
+    // なんか問題の意図とは違う気がする...
+    // でも forEach() メソッドを使うのであれば、途中でループは止められないし変数は変えられないみたいだから難しい気がする
 
     /**
      * Make your original exercise as question style about if-for statement. <br>
@@ -207,17 +246,24 @@ public class Step02IfForTest extends PlainTestCase {
      * <pre>
      * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
      * your question here (ここにあなたの質問を):
-     * 
+     * 1 から 20 までの整数のうち、 4 で割り切れるものだけを出力しなさい。
+     * ただし、 `log` を複数回呼び出し、改行により異なる整数を出力して良いものとする。
      * _/_/_/_/_/_/_/_/_/_/
      * </pre>
      */
     public void test_iffor_yourExercise() {
         // write your code here
+        for (int i = 1; i <= 20; i++) {
+            if (i % 4 == 0) {
+                log(i);
+            }
+        }
     }
 
     // ===================================================================================
     //                                                                        Small Helper
     //                                                                        ============
+    // ["broadway", "dockside", "hangar", "magiclamp"]
     private List<String> prepareStageList() {
         List<String> stageList = new ArrayList<>();
         stageList.add("broadway");
