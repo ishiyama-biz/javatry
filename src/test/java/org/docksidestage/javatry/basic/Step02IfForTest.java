@@ -116,6 +116,9 @@ public class Step02IfForTest extends PlainTestCase {
         // Python や Swift ではインクリメント自体がないらしい by ChatGPT
         // Python についてはそういえばそんなのを勉強した気がする
         // 未定義動作なのは C くらいなのか
+        // TODO ishiyama [いいね] 勉強になります(^^ by jflute (2026/08/05)
+        // 実際、Javaでも式として++を使うかというと、やらない傾向にありますね。(少なくともjfluteは)
+        // ++やるときは、独立した行で書くというのが習慣になってます。
     }
 
     // ===================================================================================
@@ -183,6 +186,15 @@ public class Step02IfForTest extends PlainTestCase {
         // Lambda 関数って呼ぶと間違いらしい by ChatGPT
         // 多分元は匿名クラスで書いていたものを関数型インターフェースとして書くことができるようにしたために Lambda 式と呼ぶことになったのだろう
         // おおよそ Lambda 式は匿名クラスの代わりになるが、 this の扱いなどが異なり、単純に変換されているものでもないらしい by ChatGPT
+
+        // TODO ishiyama [ふぉろー] Java8 はJavaにとっては大きな転換期になったバージョンだからですね。 by jflute (2026/08/05)
+        // javatryでも、step8はJava8で導入された機能に特化したステップになっています。
+        // Lambda関数、そもそもJavaには厳密には関数という呼び名の文法は存在しないので、
+        // Lambdaもあくまでコールバックのためのメソッド表現という感じです。
+        // ただ、それを実現する仕組みとして、関数型インターフェースというところで関数という言葉が出てきます。
+        // 匿名クラスとの違い、ほぼ同じものと考えても差し支えないですが、厳密にはちょっと違うというところですね。
+
+        // TODO jflute 1on1にて、for文の歴史について (2026/08/05)
     }
 
     // ===================================================================================
@@ -216,16 +228,16 @@ public class Step02IfForTest extends PlainTestCase {
     public void test_iffor_refactor_foreach_to_forEach() {
         List<String> stageList = prepareStageList();
         String sea = null;
-    //    for (String stage : stageList) {
-    //        if (stage.startsWith("br")) {
-    //            continue;
-    //        }
-    //        sea = stage;
-    //        if (stage.contains("ga")) {
-    //            break;
-    //        }
-    //    }
-    //    log(sea); // should be same as before-fix
+        //    for (String stage : stageList) {
+        //        if (stage.startsWith("br")) {
+        //            continue;
+        //        }
+        //        sea = stage;
+        //        if (stage.contains("ga")) {
+        //            break;
+        //        }
+        //    }
+        //    log(sea); // should be same as before-fix
         stageList.forEach(stage -> {
             if (stage.startsWith("br")) {
                 return;
@@ -239,6 +251,11 @@ public class Step02IfForTest extends PlainTestCase {
     }
     // なんか問題の意図とは違う気がする...
     // でも forEach() メソッドを使うのであれば、途中でループは止められないし変数は変えられないみたいだから難しい気がする
+    // TODO ishiyama [ふぉろー] 意図は大丈夫ですよ。forEach()の制限(メリット!?)を体感してもらうもので by jflute (2026/08/05)
+    // TODO jflute 1on1にて、forEach()の制限はメリットになる？話をする予定 (2026/08/05)
+
+    // TODO ishiyama もし仮に、stageListの最後に、bongar という新しい要素が追加されたとしたら... by jflute (2026/08/05)
+    // 実行結果どうなるでしょうか？foreach文をforEach()で同じ結果になるでしょうか？
 
     /**
      * Make your original exercise as question style about if-for statement. <br>
