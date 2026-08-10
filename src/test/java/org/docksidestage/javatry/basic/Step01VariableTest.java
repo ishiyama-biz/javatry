@@ -112,8 +112,9 @@ public class Step01VariableTest extends PlainTestCase {
         // Javaの場合、過去の経緯もあるし、コンセプトもあってか、バランス主義な印象。
         // 一方で、100%immutable推しの文化もある。
 
-        // TODO done ishiyama [読み物課題] 応援してる "A" にもデメリットはあるよ by jflute (2026/07/27)
+        // done ishiyama [読み物課題] 応援してる "A" にもデメリットはあるよ by jflute (2026/07/27)
         // https://jflute.hatenadiary.jp/entry/20181008/yourademerit
+        // 1on1: 改めて、メリデメ大切さのお話 (2026/08/10)
     }
 
     // ===================================================================================
