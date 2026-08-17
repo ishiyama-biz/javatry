@@ -48,13 +48,13 @@ public class Step03DataTypeTest extends PlainTestCase {
         piari = piari.plusDays(1);
         land = piari.getYear();
         bonvo = bonvo.plusMonths(1);
-        land = bonvo.getMonthValue();
-        land--;
+        land = bonvo.getMonthValue(); // 10
+        land--; // 9
         if (dstore) {
-            BigDecimal addedDecimal = amba.add(new BigDecimal(land));
+            BigDecimal addedDecimal = amba.add(new BigDecimal(land)); // 18.4
             sea = String.valueOf(addedDecimal);
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 18.4 (o)
     }
 
     // ===================================================================================
@@ -69,21 +69,33 @@ public class Step03DataTypeTest extends PlainTestCase {
         float dstore = 1.1f;
         double amba = 2.3d;
         char miraco = 'a';
-        boolean dohotel = miraco == 'a';
-        if (dohotel && dstore >= piari) {
+        boolean dohotel = miraco == 'a'; // true
+        if (dohotel && dstore >= piari) { // true && 1.1f >= 1 -> true 比較演算子の前後の値が異なる場合のキャストがどうなるかわからないがどう転んでも true
             bonvo = sea;
             land = (short) bonvo;
             bonvo = piari;
             sea = (byte) land;
-            if (amba == 2.3D) {
-                sea = (byte) amba;
+            if (amba == 2.3D) { // 2.3d == 2.3D -> true // d と D はどちらも double 型のリテラルを表す接尾辞のようだがわからない
+                sea = (byte) amba; // 2 // double -> byte の型キャストはよくわからないが切り捨てと仮定
             }
         }
-        if ((int) dstore > piari) {
+        if ((int) dstore > piari) { // 1 > 1 -> false // Java の float -> int の型キャストはよくわからないが一旦切り捨てと仮定
             sea = 0;
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 2 (o)
     }
+    // 以下 ChatGPT に聞いたこと
+    // byte : 1 byte 符号付き整数
+    // short : 2 byte 符号付き整数
+    // int : 4 byte 符号付き整数
+    // long : 8 byte 符号付き整数
+    // char : 2 byte 符号なし整数（文字コードを保持）
+    // 比較演算子の 2 つの項の型の違う場合、より大きい方に型キャストして比較する（わざわざ予想していないが直感通り）
+    // 小数型 → 整数型の型キャストでは小数部分は 0 方向に切り捨て ( -2.9 は -2 になる) (予想通り）
+    // `d` と `D`, `f` と `F` は同じ意味 (予想通り)
+    //
+    // 小さい型から大きい型は暗黙変換されるが逆は明示的キャストが必要
+    // 異なる整数同士を演算すると、より大きい型にキャストされる
 
     // ===================================================================================
     //                                                                              Object
@@ -92,8 +104,12 @@ public class Step03DataTypeTest extends PlainTestCase {
     public void test_datatype_object() {
         St3ImmutableStage stage = new St3ImmutableStage("hangar");
         String sea = stage.getStageName();
-        log(sea); // your answer? => 
+        log(sea); // your answer? => hangar(o)
     }
+
+    // Java の内部 class の修飾子わかりにくいという記憶があります...
+    // static クラスは外部クラスに紐づけられないので外部クラスのインスタンスに属するメンバーにはアクセスできない by ChatGPT
+    // 基本的には class 宣言やフィールド宣言に慣れていれば理解できるはず
 
     private static class St3ImmutableStage {
 

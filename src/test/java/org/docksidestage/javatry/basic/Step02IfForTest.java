@@ -17,6 +17,7 @@ package org.docksidestage.javatry.basic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.docksidestage.unit.PlainTestCase;
 
@@ -136,8 +137,15 @@ public class Step02IfForTest extends PlainTestCase {
         //
         // 仮説思考とリンクする考え方。
 
-        // TODO ishiyama [読み物課題] My Favorite Book: 仮説思考 by jflute (2026/08/10)
+        // done ishiyama [読み物課題] My Favorite Book: 仮説思考 by jflute (2026/08/10)
         // https://jflute.hatenadiary.jp/entry/20150111/kasetsu
+        // 「自分の中でデマを広げさせない」も一緒に読みました
+        // 前提に仮説を入れすぎたり、仮説を立ててから時間があくと確かに仮説キープは難しいなと思っていたのですごく納得感がありました。
+        // 自分はこれまでコーディングにおいて、コードの深いところにある副作用とかを見逃すのが怖く、全部読んだ方がいいと思っていました。
+        // ただ、どうしても時間がない時や、明らかにそれ以外の部分は気にしなくていいと理解できた場合だけこのようなコードリーディングをしていました。
+        // どちらかというと書き方やツールを利用して最低限のコードリーディングで理解できるようにしようという発想でした。
+        // ただこの仮説思考という考え方を知り、確かに全部を理解することは難しい場合は多く、そのような考えは他の場面でも活用できるので
+        // そのように考えられるようにトレーニングしたいと思うようになりました。
     }
 
     // ===================================================================================
@@ -282,13 +290,17 @@ public class Step02IfForTest extends PlainTestCase {
         //        }
         //    }
         //    log(sea); // should be same as before-fix
-        stageList.forEach(stage -> {
-            if (stage.startsWith("br")) {
-                return;
-            }
-            if (stage.contains("ga")) {
-                log(stage);
-                return;
+        stageList.forEach(new Consumer<String>() {
+            private boolean flag = true;
+            @Override
+            public void accept(String stage){
+                if (stage.startsWith("br")) {
+                    return;
+                }
+                if (flag && stage.contains("ga")) {
+                    log(stage);
+                    flag = false;
+                }
             }
         });
         // hangar
@@ -298,8 +310,17 @@ public class Step02IfForTest extends PlainTestCase {
     // done ishiyama [ふぉろー] 意図は大丈夫ですよ。forEach()の制限(メリット!?)を体感してもらうもので by jflute (2026/08/05)
     // done jflute 1on1にて、forEach()の制限はメリットになる？話をする予定 (2026/08/05)
 
-    // TODO ishiyama もし仮に、stageListの最後に、bongar という新しい要素が追加されたとしたら... by jflute (2026/08/05)
+    // done ishiyama もし仮に、stageListの最後に、bongar という新しい要素が追加されたとしたら... by jflute (2026/08/05)
     // 実行結果どうなるでしょうか？foreach文をforEach()で同じ結果になるでしょうか？
+
+    // 確かに、 foreach 文では `bongar` が消えますが、 forEach() では残りますね。
+    // 自分で考えてみて、ラムダ式では難しそうだったので ChatGPT に聞いてみました。
+    // 実際、 ChatGPT もラムダ式での実装は難しいとのことでした。
+    // 一応、 Cosumer を用いるやり方や AtomicReference を使うやり方を提案されました。
+    // AtomicReference はやりすぎに感じたので、 Consumer については自力で書いてみることにしました。
+    // 匿名クラスについてあまり理解していなかったが、
+    // インターフェースを実装したクラスやクラスを継承したクラスのインスタンスを作成できる文法らしい by ChatGPT
+    // 最初は関数型インターフェース専用の文法かと思ってしまっていた。
 
     /**
      * Make your original exercise as question style about if-for statement. <br>
