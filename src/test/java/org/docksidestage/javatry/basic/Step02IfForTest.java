@@ -146,6 +146,8 @@ public class Step02IfForTest extends PlainTestCase {
         // どちらかというと書き方やツールを利用して最低限のコードリーディングで理解できるようにしようという発想でした。
         // ただこの仮説思考という考え方を知り、確かに全部を理解することは難しい場合は多く、そのような考えは他の場面でも活用できるので
         // そのように考えられるようにトレーニングしたいと思うようになりました。
+        // TODO ishiyama 感想ありがとうございます！ by jflute (2026/08/24)
+        // ぜひ意識の反復練習して、無意識にできるようになってもらえたらなと。
     }
 
     // ===================================================================================
@@ -291,9 +293,11 @@ public class Step02IfForTest extends PlainTestCase {
         //    }
         //    log(sea); // should be same as before-fix
         stageList.forEach(new Consumer<String>() {
+            // TODO ishiyama エクササイズとはいえ、変数名の可読性もうちょい工夫してみましょう by jflute (2026/08/24)
             private boolean flag = true;
+
             @Override
-            public void accept(String stage){
+            public void accept(String stage) {
                 if (stage.startsWith("br")) {
                     return;
                 }
@@ -321,6 +325,7 @@ public class Step02IfForTest extends PlainTestCase {
     // 匿名クラスについてあまり理解していなかったが、
     // インターフェースを実装したクラスやクラスを継承したクラスのインスタンスを作成できる文法らしい by ChatGPT
     // 最初は関数型インターフェース専用の文法かと思ってしまっていた。
+    // TODO jflute 1on1にて、bongarのときフォロー (2026/08/24)
 
     /**
      * Make your original exercise as question style about if-for statement. <br>
