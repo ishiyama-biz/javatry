@@ -18,9 +18,11 @@ package org.docksidestage.javatry.basic;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.function.Consumer;
 
 import org.docksidestage.unit.PlainTestCase;
 
+// TODO ishiyama クラスJavaDocのauthorをお願いします (javatryポリシーとして) by jflute (2026/08/24)
 /**
  * The test of data type. <br>
  * Operate exercise as javadoc. If it's question style, write your answer before test execution. <br>
@@ -97,6 +99,15 @@ public class Step03DataTypeTest extends PlainTestCase {
     // 小さい型から大きい型は暗黙変換されるが逆は明示的キャストが必要
     // 異なる整数同士を演算すると、より大きい型にキャストされる
 
+    // #1on1: 一度、こういったややこしいことがあることを体験するのが目的 (2026/08/24)
+    // 極力、自分で書く時は、こういったややこしさを読み手に与えるコード書かないように気を付ける。
+    //
+    // 細かいJavaの文法を覚えて書いている人はほとんどいない。
+    // ベテランでもどうなるんだっけ？って思いながら読んでる。
+    // なので、レア過ぎる文法知識に依存したコードは書かない方が可読性が良くなる。
+    // 昨今だとなおさら、色々な言語をさわるので、より薄く広くの状態でJavaを書く/読む人も多い。
+    // あまり配慮しすぎても選択肢が狭まってつらくなるのでジレンマではある。
+
     // ===================================================================================
     //                                                                              Object
     //                                                                              ======
@@ -105,12 +116,47 @@ public class Step03DataTypeTest extends PlainTestCase {
         St3ImmutableStage stage = new St3ImmutableStage("hangar");
         String sea = stage.getStageName();
         log(sea); // your answer? => hangar(o)
+
+        log(stage.getClass().getName()); // e.g. ...Step03DataTypeTest$St3ImmutableStage
+        log(new Consumer<String>() { // step2から持ってきた
+            private boolean flag = true;
+
+            @Override
+            public void accept(String stage) {
+                if (stage.startsWith("br")) {
+                    return;
+                }
+                if (flag && stage.contains("ga")) {
+                    log(stage);
+                    flag = false;
+                }
+            }
+        }.getClass().getName()); // e.g. ...Step03DataTypeTest$1
     }
 
     // Java の内部 class の修飾子わかりにくいという記憶があります...
     // static クラスは外部クラスに紐づけられないので外部クラスのインスタンスに属するメンバーにはアクセスできない by ChatGPT
     // 基本的には class 宣言やフィールド宣言に慣れていれば理解できるはず
 
+    // #1on1: インナークラス、大きく二つ (2026/08/24)
+    // staticなインナークラス: 識別に外部クラス名を使うってだけの独立クラスで考えていい
+    // 何もつけないインナークラス: 外部クラスの特定のインスタンスに属するインスタンスになる
+    //                         (外部クラスのインスタンスなしではnewできない)
+    //
+    // step2の無名インナークラスも "何もつけないインナークラス" で、
+    // 外部クラスのインスタンスの属したインスタンスになっていた。
+    // なので、外部クラスのインスタンス変数にもアクセスすることができる。
+
+    // #1on1: 匿名クラス？無名クラス？ (2026/08/24)
+    // 匿名クラス :: 名前はあるけど隠してる
+    // 無名クラス :: 名前がない
+    // Javaの内部構造まで考えれば、匿名クラス。名前がないわけじゃない。$1とかになってる。
+    // 一方で利用者からすれば名前がないので無名クラス。
+
+    // #1on1: immutableクラスを自分で作るとなったらこういうことってこと (2026/08/24)
+    // コンストラクターで値を受け取って、finalなインスタンス変数に。
+    // (finalは必須ではないけど、やっておいた方が可読性は良い)
+    // そして、getterしか作らない。
     private static class St3ImmutableStage {
 
         private final String stageName;
