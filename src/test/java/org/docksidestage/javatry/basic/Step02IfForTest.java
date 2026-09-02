@@ -26,7 +26,7 @@ import org.docksidestage.unit.PlainTestCase;
  * Operate exercise as javadoc. If it's question style, write your answer before test execution. <br>
  * (javadocの通りにエクササイズを実施。質問形式の場合はテストを実行する前に考えて答えを書いてみましょう)
  * @author jflute
- * @author your_name_here
+ * @author kazuki ishiyama
  */
 public class Step02IfForTest extends PlainTestCase {
 
@@ -295,21 +295,33 @@ public class Step02IfForTest extends PlainTestCase {
         //    }
         //    log(sea); // should be same as before-fix
 
-        stageList.forEach(new Consumer<String>() {
-            // TODO ishiyama エクササイズとはいえ、変数名の可読性もうちょい工夫してみましょう by jflute (2026/08/24)
-            private boolean flag = true;
+        final Consumer<String> gaFinder = new Consumer<String>() {
+            // done ishiyama エクササイズとはいえ、変数名の可読性もうちょい工夫してみましょう by jflute (2026/08/24)
+            private String sea;
+            private boolean isFirstGa = true;
 
             @Override
             public void accept(String stage) {
-                if (stage.startsWith("br")) {
+                if (!isFirstGa || stage.startsWith("br")) {
                     return;
                 }
-                if (flag && stage.contains("ga")) {
-                    log(stage);
-                    flag = false;
+                sea = stage;
+                if (stage.contains("ga")) {
+                    isFirstGa = false;
                 }
             }
-        });
+
+            // 別の関数名にしようかと思ったけど、変数宣言時にクラス名を指定する必要があるから無理っぽい
+            // `var` を使えばいける by Claude (`auto` がないから無理かと思ったけど、 Java は `var` だった)
+            // ↑ ただし、 Java 10 以降らしい (ローカルの環境は Java 8)
+            @Override
+            public String toString() {
+                return sea;
+            }
+        };
+
+        stageList.forEach(gaFinder);
+        log(gaFinder);
         // hangar
     }
 
@@ -346,11 +358,18 @@ public class Step02IfForTest extends PlainTestCase {
     // (まだ用途違いをわかって使う分にはマシ。よくわからず動くから使うってのは怖い)
 
     // #1on1: bongarの対応はすでにできている (2026/08/24)
-    // TODO ishiyama 今度は、gaを含んだstageが一つもなかったら？ by jflute (2026/08/24)
+    // done ishiyama 今度は、gaを含んだstageが一つもなかったら？ by jflute (2026/08/24)
     // 意外にメソッド内名前付きクラスだったら解決しやすいかも。
     // もしくは、AtomicReference を使うか...
     // いや、無名インナークラスのままでも、toString()を若干hackするとかならなんとかなる？
     // どれか自分の好きなやつでやってみましょう。
+
+    // `hangar` を削除すると、
+    // 元のコード : magiclamp
+    // 無名クラスの場合 : (出力なし)
+    // 空のリストでは
+    // 元のコード : null
+    // 無名クラスの場合 : (出力なし)
 
     /**
      * Make your original exercise as question style about if-for statement. <br>

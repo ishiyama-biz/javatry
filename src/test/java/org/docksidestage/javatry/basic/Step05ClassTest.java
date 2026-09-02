@@ -28,7 +28,7 @@ import org.docksidestage.unit.PlainTestCase;
  * (要件が曖昧なところがあれば、適切だと思われる仕様を決めても良いです)
  * 
  * @author jflute
- * @author your_name_here
+ * @author kazuki ishiyama
  */
 public class Step05ClassTest extends PlainTestCase {
 
@@ -43,7 +43,7 @@ public class Step05ClassTest extends PlainTestCase {
         TicketBooth booth = new TicketBooth();
         booth.buyOneDayPassport(7400);
         int sea = booth.getQuantity();
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 9 (o)
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
@@ -51,20 +51,21 @@ public class Step05ClassTest extends PlainTestCase {
         TicketBooth booth = new TicketBooth();
         booth.buyOneDayPassport(10000);
         Integer sea = booth.getSalesProceeds();
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 10000 (o)
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_class_howToUse_nosales() {
         TicketBooth booth = new TicketBooth();
         Integer sea = booth.getSalesProceeds();
-        log(sea); // your answer? => 
+        log(sea); // your answer? => null (o)
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_class_howToUse_wrongQuantity() {
         Integer sea = doTest_class_ticket_wrongQuantity();
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 7399(x) -> 9
+        // getSalesProceeds() が呼ばれているかと思ったけど getQuantity() の方だった
     }
 
     private Integer doTest_class_ticket_wrongQuantity() {

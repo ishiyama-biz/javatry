@@ -22,7 +22,7 @@ import org.docksidestage.unit.PlainTestCase;
  * Operate exercise as javadoc. If it's question style, write your answer before test execution. <br>
  * (javadocの通りにエクササイズを実施。質問形式の場合はテストを実行する前に考えて答えを書いてみましょう)
  * @author jflute
- * @author your_name_here
+ * @author kazuki ishiyama
  */
 public class Step04MethodTest extends PlainTestCase {
 
@@ -35,15 +35,15 @@ public class Step04MethodTest extends PlainTestCase {
      */
     public void test_method_call_basic() {
         String sea = supplySomething();
-        log(sea); // your answer? =>
+        log(sea); // your answer? => over (o)
     }
 
     /** Same as the previous method question. (前のメソッドの質問と同じ) */
     public void test_method_call_many() {
         String sea = functionSomething("mystic");
-        consumeSomething(supplySomething());
-        runnableSomething();
-        log(sea); // your answer? => 
+        consumeSomething(supplySomething()); // 読む必要なし
+        runnableSomething(); // 読む必要なし
+        log(sea); // your answer? => mysmys (o)
     }
 
     private String functionSomething(String name) {
@@ -73,11 +73,21 @@ public class Step04MethodTest extends PlainTestCase {
         int sea = 904;
         boolean land = false;
         helloMutable(sea - 4, land, mutable);
-        if (!land) {
-            sea = sea + mutable.getStageName().length();
+        if (!land) { // true
+            sea = sea + mutable.getStageName().length(); // 904 + 6
         }
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 910 (o)
+        String a = null;
+        log(a);
     }
+
+    // String(=null).length() ってなんぼになるんだろう → NullPointerException
+    // そりゃそうか
+    // だったらやっぱり + 演算子とかの時に `null` とかに勝手に変換しないで欲しいと思ってしまう
+    // String a = null;
+    // log(a);
+    // これなんで IllegalArgumentException が投げられないんだ？
+    // 可変長引数だからか (Claude と相談)
 
     private int helloMutable(int sea, Boolean land, St4MutableStage piari) {
         sea++;
@@ -109,13 +119,13 @@ public class Step04MethodTest extends PlainTestCase {
     public void test_method_instanceVariable() {
         hasAnnualPassport = true;
         int sea = inParkCount;
-        offAnnualPassport(hasAnnualPassport);
-        for (int i = 0; i < 100; i++) {
+        offAnnualPassport(hasAnnualPassport); // 何もしない
+        for (int i = 0; i < 100; i++) { // 100 回インクリメント
             goToPark();
         }
         ++sea;
         sea = inParkCount;
-        log(sea); // your answer? => 
+        log(sea); // your answer? => 100 (o)
     }
 
     private void offAnnualPassport(boolean hasAnnualPassport) {
@@ -152,12 +162,39 @@ public class Step04MethodTest extends PlainTestCase {
      */
     public void test_method_making() {
         // use after making these methods
-        //String replaced = replaceCwithB(replaceAwithB("ABC"));
-        //String sea = quote(replaced, "'");
-        //if (isAvailableLogging()) {
-        //    showSea(sea);
-        //}
+        String replaced = replaceCwithB(replaceAwithB("ABC"));
+        String sea = quote(replaced, "'");
+        if (isAvailableLogging()) {
+            showSea(sea);
+        }
+        // BBB
     }
 
     // write methods here
+
+    // 一つのString引数、引数の "A" を "B" に置き換えたStringを戻す
+    private String replaceAwithB(String mayContainsAString) {
+        return mayContainsAString.replace("A", "B");
+    }
+
+    // 一つのString引数、引数の "C" を "B" に置き換えたStringを戻す
+    private String replaceCwithB(String mayContainsCString) {
+        return mayContainsCString.replace("C", "B");
+    }
+
+    // 二つのString引数、第一引数を第二引数(引用符)で囲ったものを戻す
+    private String quote(String quoted, String quotation) {
+        return quotation + quoted + quotation;
+    }
+
+    // 引数なし、privateのインスタンス変数 "availableLogging" (初期値:true) を戻す (それも別途作る)
+    private boolean availableLogging = true;
+    private boolean isAvailableLogging() {
+        return availableLogging ;
+    }
+
+    // 一つのString引数、戻り値なし、引数をlog()で表示する
+    private void showSea(String sea) {
+        log(sea);
+    }
 }
