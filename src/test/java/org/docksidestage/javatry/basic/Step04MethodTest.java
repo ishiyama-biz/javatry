@@ -88,6 +88,10 @@ public class Step04MethodTest extends PlainTestCase {
     // log(a);
     // これなんで IllegalArgumentException が投げられないんだ？
     // 可変長引数だからか (Claude と相談)
+    // #1on1: log()メソッドを追ってみた (2026/09/11)
+
+    // #1on1: $オブジェクト指向を最初にやったのがC++ (2026/09/11)
+    // step6で深掘りしていきましょう。
 
     private int helloMutable(int sea, Boolean land, St4MutableStage piari) {
         sea++;
@@ -171,7 +175,21 @@ public class Step04MethodTest extends PlainTestCase {
     }
 
     // write methods here
+    // #1on1: いいね、メソッドの定義位置が、public側の呼び出し順序と一致して、直感的に把握しやすい (2026/09/11)
+    // $メソッドの定義位置、普段も気になってる。Repositoryとかだと、メソッドが大量で順序に迷う、どこに追加しよう。
+    // $内容ごとにセクション分けがされているので、自分でセクション分けしている。
+    // 呼び出し順序というのは一例ではあって、何かしらの他のルールもあるかもしれないけど...
+    // jfluteは呼び出し順序に合わせるスタイルを多くやっている。
+    // LastaFluteのActionRequestProcessorをコードを見ながら参考に。
+    // 階層構造も入れつつ呼び出し順序を意識しているケース。
+    //
+    // 一番下に追加される問題。
+    // 他人の作ったクラスにメソッド追加、おじゃまします感。
+    // 既存クラスの「コード体裁デザイン」を把握して尊重して、その上で修正をして欲しい。
+    // 既存クラスに対する責任って、みんな持ってる。おじゃまします感してる場合ではない。
+    // そのクラスの「コード体裁デザイン」の責任を、その瞬間持っている。
 
+    // #1on1: いいね、引数名、ニュアンスが入ってて素晴らしい。strでも80点くらいだけど、本気がやるならこれ (2026/09/11)
     // 一つのString引数、引数の "A" を "B" に置き換えたStringを戻す
     private String replaceAwithB(String mayContainsAString) {
         return mayContainsAString.replace("A", "B");
@@ -182,6 +200,7 @@ public class Step04MethodTest extends PlainTestCase {
         return mayContainsCString.replace("C", "B");
     }
 
+    // #1on1: いいね、第一引数、第二引数ともにわかりやすい。役割を書いてる。 (2026/09/11)
     // 二つのString引数、第一引数を第二引数(引用符)で囲ったものを戻す
     private String quote(String quoted, String quotation) {
         return quotation + quoted + quotation;
@@ -189,8 +208,9 @@ public class Step04MethodTest extends PlainTestCase {
 
     // 引数なし、privateのインスタンス変数 "availableLogging" (初期値:true) を戻す (それも別途作る)
     private boolean availableLogging = true;
+
     private boolean isAvailableLogging() {
-        return availableLogging ;
+        return availableLogging;
     }
 
     // 一つのString引数、戻り値なし、引数をlog()で表示する

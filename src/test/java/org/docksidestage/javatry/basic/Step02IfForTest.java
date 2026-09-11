@@ -15,6 +15,8 @@
  */
 package org.docksidestage.javatry.basic;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -283,7 +285,7 @@ public class Step02IfForTest extends PlainTestCase {
      */
     public void test_iffor_refactor_foreach_to_forEach() {
         List<String> stageList = prepareStageList();
-        String sea = null;
+        //    String sea = null;
         //    for (String stage : stageList) {
         //        if (stage.startsWith("br")) {
         //            continue;
@@ -298,7 +300,20 @@ public class Step02IfForTest extends PlainTestCase {
         final Consumer<String> gaFinder = new Consumer<String>() {
             // done ishiyama エクササイズとはいえ、変数名の可読性もうちょい工夫してみましょう by jflute (2026/08/24)
             private String sea;
+            // TODO ishiyama true/falseを逆転、そしてisじゃなくてニュアンスを付けてみよう by jflute (2026/09/11)
             private boolean isFirstGa = true;
+            // #1on1: 最初のgaが来たかどうか？来たから isFirstGa=false (2026/09/11)
+            // 最初のgaが来たら、isFirstGaがtrueになる方が直感的な気がする。
+            // firstGaComes=true
+            // is it FirstGa? yes=true
+            // e.g. foundGa or foundFirstGa (gaが見つかったかどうか) or passedFirstGa
+            // isは、汎用万能boolean prefix って感じなんですけど...
+            // 若干アバウトではある。付けられる時はニュアンスを付けた方が良いかなと。
+            //
+            // イベントなのか？状態なのか？
+            // // なんとかフラグというboolean変数名
+            // https://jflute.hatenadiary.jp/entry/20181013/flgornuance
+            // isも曖昧なので注意。
 
             @Override
             public void accept(String stage) {
@@ -314,8 +329,20 @@ public class Step02IfForTest extends PlainTestCase {
             // 別の関数名にしようかと思ったけど、変数宣言時にクラス名を指定する必要があるから無理っぽい
             // `var` を使えばいける by Claude (`auto` がないから無理かと思ったけど、 Java は `var` だった)
             // ↑ ただし、 Java 10 以降らしい (ローカルの環境は Java 8)
+            // #1on1: accept()以外のメソッドを追加しようと思ったけど... (2026/09/11)
+            // 無名インナークラスだから、具象クラスを型として扱うことができなくて呼べない。
+            // それで、toString()を使った。Object型のメソッドであれば誰でも呼べる。
             @Override
             public String toString() {
+                return sea;
+            }
+
+            @SuppressWarnings("unused")
+            public String land() {
+                // これは、型としては隠されてるから呼び出せないけど、
+                // インスタンスにはメソッド定義はされているので、
+                // リフレクションで無理やり呼べる。
+                log("land()の中だよー");
                 return sea;
             }
         };
@@ -323,6 +350,27 @@ public class Step02IfForTest extends PlainTestCase {
         stageList.forEach(gaFinder);
         log(gaFinder);
         // hangar
+
+        jfluteさんがリフレクションで無理やりやった(gaFinder);
+    }
+
+    // 真似しないでね by jflute
+    private void jfluteさんがリフレクションで無理やりやった(final Consumer<String> gaFinder) {
+        try {
+            Method method = gaFinder.getClass().getMethod("land", new Class<?>[] {});
+            Object result = method.invoke(gaFinder, new Object[] {});
+            log("@@@: " + result);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
     // なんか問題の意図とは違う気がする...
@@ -341,7 +389,7 @@ public class Step02IfForTest extends PlainTestCase {
     // 匿名クラスについてあまり理解していなかったが、
     // インターフェースを実装したクラスやクラスを継承したクラスのインスタンスを作成できる文法らしい by ChatGPT
     // 最初は関数型インターフェース専用の文法かと思ってしまっていた。
-    // TODO jflute 1on1にて、bongarのときフォロー (2026/08/24)
+    // done jflute 1on1にて、bongarのときフォロー (2026/08/24)
 
     // #1on1: AtomicReferenceのUnsafeから、Javaの会社、MySQLの会社のお話 (2026/08/24)
     // MySQL, Oracle DB などなど。

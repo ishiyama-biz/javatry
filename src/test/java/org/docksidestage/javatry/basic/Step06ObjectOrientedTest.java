@@ -319,6 +319,7 @@ public class Step06ObjectOrientedTest extends PlainTestCase {
         // your confirmation code here
     }
 
+    // TODO jflute 1on1にて、C++のオブジェクト指向との比較話 (2026/09/11)
     /**
      * What is difference as concept between abstract class and interface? <br>
      * (抽象クラスとインターフェースの概念的な違いはなんでしょう？)
