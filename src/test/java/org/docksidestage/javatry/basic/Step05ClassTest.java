@@ -106,6 +106,13 @@ public class Step05ClassTest extends PlainTestCase {
         // done
     }
 
+    // #1on1: バグの種類 (2026/10/02)
+    // A. 複数行でバグ: 一行一行を独立して見てても見つからない (流れをみないと見つけられない)
+    // B. 単行でバグ: 一行でダメってことがわかる、ので見つけやすい
+    //
+    // "A" はケースによってはなかなかやっかいなので要注意。
+    // しかも今回の "A" は、普段は正常に動いて、例外の時だけ不具合になる。
+
     /**
      * Make method for buying two-day passport (price is 13200). (which can return change as method return value)
      * (TwoDayPassport (金額は13200) も買うメソッドを作りましょう (戻り値でお釣りをちゃんと返すように))

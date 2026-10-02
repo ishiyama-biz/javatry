@@ -15,6 +15,7 @@
  */
 package org.docksidestage.bizfw.basic.buyticket;
 
+// TODO ishiyama せっかくなので自分名前を刻みましょう、authorの追加をお願いします by jflute (2026/10/02)
 /**
  * @author jflute
  */
@@ -31,6 +32,31 @@ public class TicketBooth {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
+    // #1on1: $quantityという名前から、トータル的な在庫スタイルなのかな？と思ったけど... (2026/10/02)
+    // $エクササイズやっていく上で、別物扱いされてるかな？とも思った。
+    // 実装コードの方を優先したというのが良いと思いました。
+    // quantityだけシンプルな名前になっているのがちょっとした罠。
+    // #1on1: 在庫分ける方向にしたとして、quantityをoneDayPassportQuantityにするの迷わなかったか (2026/10/02)
+    // $迷わん
+    // ここでまたおじゃまします感話。
+    // プルリクの差分の行数を減らすプレッシャーを持ってたり...
+    //  → $であれば、コミットを分けてあげると工夫はできる
+    // quantityのままだとしたら、トータル感が出やすいので、直した方がベターだと思う。
+    // コード体裁デザインのバランスの話につながる。
+    // twoDayが追加されたことによって、このクラスのバランスは変わったと言える。
+    // なので、今のバランスに合わせた体裁にする責任は、いまこの修正をする人にある。
+    // $keep it simple で、多少将来が見えてたとしても、今実装はしない方がいいか？
+    // 確かに、ケースバイケースにはなります。自信があるか？それだけのスキルがあるか？
+    // 無難なのは keep it simple と言える。
+    // やるにしても、その意図をしっかりコメントにしておく。
+    // コメントあれば、違う方向に進んだとしても、後の人ががっつり直すことを決断しやすい。
+    //
+    // keep it simple でも、思考は easy であってはいけない。
+    // oneDayニュアンスとtotalニュアンスはしっかり見出して切り分けてないといけない。
+    //
+    // jflute的には、keep it obvious の方がしっくりくるかも。
+    // (simpleはeasyと混同されやすい宿命にあるかも!?)
+    //
     private int oneDayPassportQuantity = MAX_ONE_DAY_PASSPORT_QUANTITY;
     private int twoDayPassportQuantity = MAX_TWO_DAY_PASSPORT_QUANTITY;
     private Integer salesProceeds; // null allowed: until first purchase
@@ -52,6 +78,7 @@ public class TicketBooth {
     // * @throws TicketSoldOutException ブース内のチケットが売り切れだったら
     // * @throws TicketShortMoneyException 買うのに金額が足りなかったら
     // */
+    // TODO ishiyama @returnを追加で by jflute (2026/10/02)
     /**
      * Buy one-day passport, method for park guest.
      * @param handedMoney The money (amount) handed over from park guest. (NotNull, NotMinus)
@@ -59,6 +86,17 @@ public class TicketBooth {
      * @throws TicketShortMoneyException When the specified money is short for purchase.
      */
     public Ticket buyOneDayPassport(Integer handedMoney) {
+        // #1on1: $例外までメソッド化すると流れがわかりにくかもと思った!? (2026/10/02)
+        // 確かに例外throw隠蔽しすぎると、どんな前提条件をクリアしてるのかわかりにくくなる。
+        // 程度の問題もあるかも。e.g. validatePurchable() とかでまとめることは多い。
+        // $validateならわかりやすいかも。
+        // 前提条件のチェックなのか？サブの処理なのか？
+        // 一方で、流れを重視するなら、
+        // assertQuantityExists();
+        // assertHandedMoneyEnough();
+        // というようにallでまとめるのではなく、個別にチェックを表現するようにするとか。
+        // (ただ、1こ1こはメソッド化してしまう)
+        // assertと言ったら、ダメだったときは例外が投げられるというイメージ。
         if (oneDayPassportQuantity <= 0) {
             throw new TicketSoldOutException("Sold out");
         }
@@ -118,6 +156,10 @@ public class TicketBooth {
         }
     }
 
+    // TODO ishiyama canBeBought() でもいいかな by jflute (2026/10/02)
+    // 戻り値がbooleanな時点で、checkIfのニュアンスがすでに入っている。
+    // さらに、booleanのメソッド名、助動詞よく使われる。(世界的な慣習として)
+    // TODO ishiyama @throws消し忘れ ($最初validateイメージだった) by jflute (2026/10/02)
     /**
      * Check if the user can buy the ticket whose price is `price`.
      * @param handedMoney The money (amount) handed over from park guest. (NotNull, NotMinus)
@@ -132,6 +174,10 @@ public class TicketBooth {
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
+    // #1on1: 直したのGood (2026/10/02)
+    // getQuantity()の呼び出し側が、OneDayニュアンスなのか？Totalニュアンスなのか？
+    // そこは気にしないといけないところ。
+    // IntelliJを使おうがなんにせよ、呼び出し側一箇所一箇所を見て辻褄が合うか確認は必要。
     public int getOneDayPassportQuantity() {
         return oneDayPassportQuantity;
     }
@@ -139,6 +185,7 @@ public class TicketBooth {
     public int getTwoDayPassportQuantity() {
         return twoDayPassportQuantity;
     }
+
     public Integer getSalesProceeds() {
         return salesProceeds;
     }
