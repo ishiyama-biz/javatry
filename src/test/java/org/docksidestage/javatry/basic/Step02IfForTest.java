@@ -301,7 +301,7 @@ public class Step02IfForTest extends PlainTestCase {
             // done ishiyama エクササイズとはいえ、変数名の可読性もうちょい工夫してみましょう by jflute (2026/08/24)
             private String sea;
             // TODO ishiyama true/falseを逆転、そしてisじゃなくてニュアンスを付けてみよう by jflute (2026/09/11)
-            private boolean isFirstGa = true;
+            private boolean foundFirstGa = false;
             // #1on1: 最初のgaが来たかどうか？来たから isFirstGa=false (2026/09/11)
             // 最初のgaが来たら、isFirstGaがtrueになる方が直感的な気がする。
             // firstGaComes=true
@@ -317,12 +317,12 @@ public class Step02IfForTest extends PlainTestCase {
 
             @Override
             public void accept(String stage) {
-                if (!isFirstGa || stage.startsWith("br")) {
+                if (!foundFirstGa || stage.startsWith("br")) {
                     return;
                 }
                 sea = stage;
                 if (stage.contains("ga")) {
-                    isFirstGa = false;
+                    foundFirstGa = false;
                 }
             }
 

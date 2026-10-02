@@ -23,13 +23,16 @@ public class TicketBooth {
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
-    private static final int MAX_QUANTITY = 10;
+    private static final int MAX_ONE_DAY_PASSPORT_QUANTITY = 10;
+    private static final int MAX_TWO_DAY_PASSPORT_QUANTITY = 10;
     private static final int ONE_DAY_PRICE = 7400; // when 2019/06/15
+    private static final int TWO_DAY_PRICE = 13200;
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    private int quantity = MAX_QUANTITY;
+    private int oneDayPassportQuantity = MAX_ONE_DAY_PASSPORT_QUANTITY;
+    private int twoDayPassportQuantity = MAX_TWO_DAY_PASSPORT_QUANTITY;
     private Integer salesProceeds; // null allowed: until first purchase
 
     // ===================================================================================
@@ -55,18 +58,45 @@ public class TicketBooth {
      * @throws TicketSoldOutException When ticket in booth is sold out.
      * @throws TicketShortMoneyException When the specified money is short for purchase.
      */
-    public void buyOneDayPassport(Integer handedMoney) {
-        if (quantity <= 0) {
+    public Ticket buyOneDayPassport(Integer handedMoney) {
+        if (oneDayPassportQuantity <= 0) {
             throw new TicketSoldOutException("Sold out");
         }
-        --quantity;
-        if (handedMoney < ONE_DAY_PRICE) {
+        if (!checkIfCanBeBought(handedMoney, ONE_DAY_PRICE)) {
             throw new TicketShortMoneyException("Short money: " + handedMoney);
         }
+        --oneDayPassportQuantity;
+        addSalesProceeds(ONE_DAY_PRICE);
+        return new Ticket(ONE_DAY_PRICE);
+    }
+
+    /**
+     * Buy two-day passport, method for park guest.
+     * @param handedMoney The money (amount) handed over from park guest. (NotNull, NotMinus)
+     * @throws TicketSoldOutException When ticket in booth is sold out.
+     * @throws TicketShortMoneyException When the specified money is short for purchase.
+     */
+    public Integer buyTwoDayPassport(Integer handedMoney) {
+        if (twoDayPassportQuantity <= 0) {
+            throw new TicketSoldOutException("Sold out");
+        }
+        if (!checkIfCanBeBought(handedMoney, TWO_DAY_PRICE)) {
+            throw new TicketShortMoneyException("Short money: " + handedMoney);
+        }
+        twoDayPassportQuantity--;
+        addSalesProceeds(TWO_DAY_PRICE);
+        return handedMoney - TWO_DAY_PRICE;
+    }
+
+    /**
+     * 売り上げを追加
+     * @param price 売れたものの価格
+     */
+    private void addSalesProceeds(Integer price) {
         if (salesProceeds != null) { // second or more purchase
-            salesProceeds = salesProceeds + handedMoney;
+            salesProceeds += price;
         } else { // first purchase
-            salesProceeds = handedMoney;
+            salesProceeds = price;
         }
     }
 
@@ -88,13 +118,27 @@ public class TicketBooth {
         }
     }
 
+    /**
+     * Check if the user can buy the ticket whose price is `price`.
+     * @param handedMoney The money (amount) handed over from park guest. (NotNull, NotMinus)
+     * @param price the price of ticket. (NotNull, NotMinus)
+     * @throws TicketSoldOutException When ticket in booth is sold out.
+     * @throws TicketShortMoneyException When the specified money is short for purchase.
+     */
+    private boolean checkIfCanBeBought(Integer handedMoney, Integer price) {
+        return handedMoney >= price;
+    }
+
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public int getQuantity() {
-        return quantity;
+    public int getOneDayPassportQuantity() {
+        return oneDayPassportQuantity;
     }
 
+    public int getTwoDayPassportQuantity() {
+        return twoDayPassportQuantity;
+    }
     public Integer getSalesProceeds() {
         return salesProceeds;
     }
