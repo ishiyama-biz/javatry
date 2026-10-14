@@ -15,9 +15,10 @@
  */
 package org.docksidestage.bizfw.basic.buyticket;
 
-// TODO ishiyama せっかくなので自分名前を刻みましょう、authorの追加をお願いします by jflute (2026/10/02)
+// done ishiyama せっかくなので自分名前を刻みましょう、authorの追加をお願いします by jflute (2026/10/02)
 /**
  * @author jflute
+ * @author kazuki.ishiyama
  */
 public class TicketBooth {
 
@@ -78,12 +79,13 @@ public class TicketBooth {
     // * @throws TicketSoldOutException ブース内のチケットが売り切れだったら
     // * @throws TicketShortMoneyException 買うのに金額が足りなかったら
     // */
-    // TODO ishiyama @returnを追加で by jflute (2026/10/02)
+    // done ishiyama @returnを追加で by jflute (2026/10/02)
     /**
      * Buy one-day passport, method for park guest.
      * @param handedMoney The money (amount) handed over from park guest. (NotNull, NotMinus)
      * @throws TicketSoldOutException When ticket in booth is sold out.
      * @throws TicketShortMoneyException When the specified money is short for purchase.
+     * @return the ticket somebody buys
      */
     public Ticket buyOneDayPassport(Integer handedMoney) {
         // #1on1: $例外までメソッド化すると流れがわかりにくかもと思った!? (2026/10/02)
@@ -97,12 +99,7 @@ public class TicketBooth {
         // というようにallでまとめるのではなく、個別にチェックを表現するようにするとか。
         // (ただ、1こ1こはメソッド化してしまう)
         // assertと言ったら、ダメだったときは例外が投げられるというイメージ。
-        if (oneDayPassportQuantity <= 0) {
-            throw new TicketSoldOutException("Sold out");
-        }
-        if (!checkIfCanBeBought(handedMoney, ONE_DAY_PRICE)) {
-            throw new TicketShortMoneyException("Short money: " + handedMoney);
-        }
+        validatePurchasable(oneDayPassportQuantity, ONE_DAY_PRICE, handedMoney);
         --oneDayPassportQuantity;
         addSalesProceeds(ONE_DAY_PRICE);
         return new Ticket(ONE_DAY_PRICE);
@@ -114,16 +111,11 @@ public class TicketBooth {
      * @throws TicketSoldOutException When ticket in booth is sold out.
      * @throws TicketShortMoneyException When the specified money is short for purchase.
      */
-    public Integer buyTwoDayPassport(Integer handedMoney) {
-        if (twoDayPassportQuantity <= 0) {
-            throw new TicketSoldOutException("Sold out");
-        }
-        if (!checkIfCanBeBought(handedMoney, TWO_DAY_PRICE)) {
-            throw new TicketShortMoneyException("Short money: " + handedMoney);
-        }
+    public TicketBuyResult buyTwoDayPassport(Integer handedMoney) {
+        validatePurchasable(twoDayPassportQuantity, TWO_DAY_PRICE, handedMoney);
         twoDayPassportQuantity--;
         addSalesProceeds(TWO_DAY_PRICE);
-        return handedMoney - TWO_DAY_PRICE;
+        return new TicketBuyResult(new Ticket(TWO_DAY_PRICE), handedMoney - TWO_DAY_PRICE);
     }
 
     /**
@@ -156,19 +148,34 @@ public class TicketBooth {
         }
     }
 
-    // TODO ishiyama canBeBought() でもいいかな by jflute (2026/10/02)
+    // done ishiyama canBeBought() でもいいかな by jflute (2026/10/02)
     // 戻り値がbooleanな時点で、checkIfのニュアンスがすでに入っている。
     // さらに、booleanのメソッド名、助動詞よく使われる。(世界的な慣習として)
-    // TODO ishiyama @throws消し忘れ ($最初validateイメージだった) by jflute (2026/10/02)
+    // done ishiyama @throws消し忘れ ($最初validateイメージだった) by jflute (2026/10/02)
     /**
      * Check if the user can buy the ticket whose price is `price`.
      * @param handedMoney The money (amount) handed over from park guest. (NotNull, NotMinus)
      * @param price the price of ticket. (NotNull, NotMinus)
-     * @throws TicketSoldOutException When ticket in booth is sold out.
-     * @throws TicketShortMoneyException When the specified money is short for purchase.
      */
-    private boolean checkIfCanBeBought(Integer handedMoney, Integer price) {
+    private boolean canBeBought(Integer handedMoney, Integer price) {
         return handedMoney >= price;
+    }
+
+    /**
+     * 購入可能かを調べる。問題がある場合は対応する例外を投げる。
+     * @param ticketQuantity チケットの残枚数
+     * @param ticketPrice チケットの料金
+     * @param handedMoney 支払い金額
+     * @throws TicketSoldOutException チケットの残枚数が足りない場合
+     * @throws TicketShortMoneyException 支払い金額が足りない場合
+     */
+    private void validatePurchasable(Integer ticketQuantity, Integer ticketPrice, Integer handedMoney) {
+        if (ticketQuantity <= 0) {
+            throw new TicketSoldOutException("Sold out");
+        }
+        if (!canBeBought(handedMoney, ticketPrice)) {
+            throw new TicketShortMoneyException("Short money: " + handedMoney);
+        }
     }
 
     // ===================================================================================

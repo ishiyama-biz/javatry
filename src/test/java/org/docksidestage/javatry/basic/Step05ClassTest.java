@@ -18,6 +18,7 @@ package org.docksidestage.javatry.basic;
 import org.docksidestage.bizfw.basic.buyticket.Ticket;
 import org.docksidestage.bizfw.basic.buyticket.TicketBooth;
 import org.docksidestage.bizfw.basic.buyticket.TicketBooth.TicketShortMoneyException;
+import org.docksidestage.bizfw.basic.buyticket.TicketBuyResult;
 import org.docksidestage.unit.PlainTestCase;
 
 /**
@@ -121,7 +122,7 @@ public class Step05ClassTest extends PlainTestCase {
         // uncomment after making the method
         TicketBooth booth = new TicketBooth();
         int money = 14000;
-        int change = booth.buyTwoDayPassport(money);
+        int change = booth.buyTwoDayPassport(money).getChange();
         Integer sea = booth.getSalesProceeds() + change;
         log(sea); // should be same as money
 
@@ -143,7 +144,9 @@ public class Step05ClassTest extends PlainTestCase {
         booth.buyOneDayPassport(10000);
         log(booth.getOneDayPassportQuantity(), booth.getSalesProceeds()); // should be same as before-fix
         // before : 9,7400
-        // after : 9, 7400
+        // after : 9,7400
+        // ishiyama : updated
+        // `rethrow` を書かないといけない記憶がぼんやりとがあったけど、 RuntimeException や Error は書かなくてよかった (Claude と相談)
     }
 
     // ===================================================================================
@@ -169,12 +172,12 @@ public class Step05ClassTest extends PlainTestCase {
      */
     public void test_class_moreFix_return_whole() {
         // uncomment after modifying the method
-        //TicketBooth booth = new TicketBooth();
-        //int handedMoney = 20000;
-        //TicketBuyResult buyResult = booth.buyTwoDayPassport(handedMoney);
-        //Ticket twoDayPassport = buyResult.getTicket();
-        //int change = buyResult.getChange();
-        //log(twoDayPassport.getDisplayPrice() + change); // should be same as money
+        TicketBooth booth = new TicketBooth();
+        int handedMoney = 20000;
+        TicketBuyResult buyResult = booth.buyTwoDayPassport(handedMoney);
+        Ticket twoDayPassport = buyResult.getTicket();
+        int change = buyResult.getChange();
+        log(twoDayPassport.getDisplayPrice() + change); // should be same as money
     }
 
     /**

@@ -25,12 +25,14 @@ public class Ticket {
     //                                                                           =========
     private final int displayPrice; // written on ticket, park guest can watch this
     private boolean alreadyIn; // true means this ticket is unavailable
+    private int remainingTimes;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public Ticket(int displayPrice) {
+    public Ticket(int displayPrice, int remainingTimes) {
         this.displayPrice = displayPrice;
+        this.remainingTimes = remainingTimes;
     }
 
     // ===================================================================================
