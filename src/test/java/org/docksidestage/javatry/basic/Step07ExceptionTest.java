@@ -171,6 +171,7 @@ public class Step07ExceptionTest extends PlainTestCase {
     // ===================================================================================
     //                                                                   Checked Exception
     //                                                                   =================
+    // TODO jflute step5で rethrow しないといけない記憶の話を聞いたので、ここでフォロー (2026/10/14)
     /**
      * Show canonical path of new java.io.File(".") by log(), and if I/O error, show message and stack-trace instead <br>
      * (new java.io.File(".") の canonical path を取得してログに表示、I/Oエラーの時はメッセージとスタックトレースを代わりに表示)

@@ -23,7 +23,11 @@ public class Ticket {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
+    // #1on1: タグコメントについて。なぜ右？なぜ3行？のお話 (2026/10/14)
+    // #1on1: タグコメントから、インスタンス変数のカテゴリ化について (2026/10/14)
+    // 空行空けるだけでも違う。一番手軽なカテゴリ化。
     private final int displayPrice; // written on ticket, park guest can watch this
+
     private boolean alreadyIn; // true means this ticket is unavailable
     private int remainingTimes;
 

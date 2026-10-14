@@ -100,11 +100,16 @@ public class TicketBooth {
         // (ただ、1こ1こはメソッド化してしまう)
         // assertと言ったら、ダメだったときは例外が投げられるというイメージ。
         validatePurchasable(oneDayPassportQuantity, ONE_DAY_PRICE, handedMoney);
+        // TODO ishiyama デクリメントの場所、自分のやり方で統一してOK by jflute (2026/10/14)
+        // #1on1: 前置きが流行った話 (2026/10/14)
         --oneDayPassportQuantity;
         addSalesProceeds(ONE_DAY_PRICE);
         return new Ticket(ONE_DAY_PRICE);
     }
 
+    // TODO ishiyama @returnを追加で by jflute (2026/10/14)
+    // #1on1: IDEのフォーマット定義の話まで踏み込んでみた (2026/10/14)
+    // .idea, .settings, .vscode
     /**
      * Buy two-day passport, method for park guest.
      * @param handedMoney The money (amount) handed over from park guest. (NotNull, NotMinus)
@@ -152,6 +157,7 @@ public class TicketBooth {
     // 戻り値がbooleanな時点で、checkIfのニュアンスがすでに入っている。
     // さらに、booleanのメソッド名、助動詞よく使われる。(世界的な慣習として)
     // done ishiyama @throws消し忘れ ($最初validateイメージだった) by jflute (2026/10/02)
+    // TODO ishiyama @returnをぜひ by jflute (2026/10/14)
     /**
      * Check if the user can buy the ticket whose price is `price`.
      * @param handedMoney The money (amount) handed over from park guest. (NotNull, NotMinus)
@@ -161,6 +167,11 @@ public class TicketBooth {
         return handedMoney >= price;
     }
 
+    // TODO ishiyama 例外宣言の近くに行きたいところ、canBeBought()と入れ替えれば自然とそうなる by jflute (2026/10/14)
+    // #1on1: Javaの場合、上から下のものを呼ぶ慣習が強い (2026/10/14)
+    // もともとデフォルトのフォーマットとして、publicが上、privateが下というのがある。
+    // そこから自然と、上から下のものを呼ぶな感覚になったかも。
+    // でも、JSとか文法的にそもそも上で宣言してからみたいなものもあるので、ケースバイケース。
     /**
      * 購入可能かを調べる。問題がある場合は対応する例外を投げる。
      * @param ticketQuantity チケットの残枚数

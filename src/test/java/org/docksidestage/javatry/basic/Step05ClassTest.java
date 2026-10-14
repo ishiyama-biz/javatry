@@ -147,6 +147,7 @@ public class Step05ClassTest extends PlainTestCase {
         // after : 9,7400
         // ishiyama : updated
         // `rethrow` を書かないといけない記憶がぼんやりとがあったけど、 RuntimeException や Error は書かなくてよかった (Claude と相談)
+        // #1on1: step7のチェック例外のところでじっくり (2026/10/14)
     }
 
     // ===================================================================================
@@ -180,6 +181,7 @@ public class Step05ClassTest extends PlainTestCase {
         log(twoDayPassport.getDisplayPrice() + change); // should be same as money
     }
 
+    // TODO jflute 次回ここから (2026/10/14)
     /**
      * Now you can use only one in spite of two-day passport, so fix Ticket to be able to handle plural days. <br>
      * (TwoDayPassportなのに一回しか利用できません。複数日数に対応できるようにTicketを修正しましょう)
