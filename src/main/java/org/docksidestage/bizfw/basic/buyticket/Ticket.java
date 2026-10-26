@@ -15,8 +15,11 @@
  */
 package org.docksidestage.bizfw.basic.buyticket;
 
+import java.time.LocalDateTime;
+
 /**
  * @author jflute
+ * @author kazuki.ishiyama
  */
 public class Ticket {
 
@@ -27,26 +30,39 @@ public class Ticket {
     // #1on1: タグコメントから、インスタンス変数のカテゴリ化について (2026/10/14)
     // 空行空けるだけでも違う。一番手軽なカテゴリ化。
     private final int displayPrice; // written on ticket, park guest can watch this
+    private final int initialUses;
+    private final boolean isOnlyNight;
 
-    private boolean alreadyIn; // true means this ticket is unavailable
-    private int remainingTimes;
+    private int remainingUses;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public Ticket(int displayPrice, int remainingTimes) {
+    public Ticket(int displayPrice, int initialUses, boolean isOnlyNight) {
         this.displayPrice = displayPrice;
-        this.remainingTimes = remainingTimes;
+        this.remainingUses = this.initialUses = initialUses;
+        this.isOnlyNight = isOnlyNight;
     }
 
     // ===================================================================================
     //                                                                             In Park
     //                                                                             =======
     public void doInPark() {
-        if (alreadyIn) {
-            throw new IllegalStateException("Already in park by this ticket: displayedPrice=" + displayPrice);
+        if (isAvailable()) {
+            throw new IllegalStateException("This ticket has no remaining uses : displayedPrice=" + displayPrice);
         }
-        alreadyIn = true;
+        assertNightOnly();
+        remainingUses--;
+    }
+
+    private void assertNightOnly() {
+        if (!isOnlyNight) {
+            return;
+        }
+        LocalDateTime nowDate = LocalDateTime.now();
+        if (nowDate.getHour() < 17) {
+            throw new RuntimeException("The night-only ticket is used before 17:00");
+        }
     }
 
     // ===================================================================================
@@ -56,7 +72,10 @@ public class Ticket {
         return displayPrice;
     }
 
-    public boolean isAlreadyIn() {
-        return alreadyIn;
+    public int getInitialUses() { return initialUses; }
+
+    public boolean isAvailable() {
+        return remainingUses <= 0;
     }
+
 }

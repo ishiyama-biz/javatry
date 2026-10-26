@@ -27,8 +27,12 @@ public class TicketBooth {
     //                                                                          ==========
     private static final int MAX_ONE_DAY_PASSPORT_QUANTITY = 10;
     private static final int MAX_TWO_DAY_PASSPORT_QUANTITY = 10;
+    private static final int MAX_FOUR_DAY_PASSPORT_QUANTITY = 10;
+    private static final int MAX_NIGHT_ONLY_TWO_DAY_PASSPORT_QUANTITY = 10;
     private static final int ONE_DAY_PRICE = 7400; // when 2019/06/15
     private static final int TWO_DAY_PRICE = 13200;
+    private static final int FOUR_DAY_PRICE = 22400;
+    private static final int NIGHT_ONLY_TWO_DAY_PRICE = 13200;
 
     // ===================================================================================
     //                                                                           Attribute
@@ -60,6 +64,8 @@ public class TicketBooth {
     //
     private int oneDayPassportQuantity = MAX_ONE_DAY_PASSPORT_QUANTITY;
     private int twoDayPassportQuantity = MAX_TWO_DAY_PASSPORT_QUANTITY;
+    private int fourDayPassportQuantity = MAX_FOUR_DAY_PASSPORT_QUANTITY;
+    private int nightOnlyTwoDayPassportQuantity = MAX_NIGHT_ONLY_TWO_DAY_PASSPORT_QUANTITY;
     private Integer salesProceeds; // null allowed: until first purchase
 
     // ===================================================================================
@@ -100,14 +106,14 @@ public class TicketBooth {
         // (ただ、1こ1こはメソッド化してしまう)
         // assertと言ったら、ダメだったときは例外が投げられるというイメージ。
         validatePurchasable(oneDayPassportQuantity, ONE_DAY_PRICE, handedMoney);
-        // TODO ishiyama デクリメントの場所、自分のやり方で統一してOK by jflute (2026/10/14)
+        // done ishiyama デクリメントの場所、自分のやり方で統一してOK by jflute (2026/10/14)
         // #1on1: 前置きが流行った話 (2026/10/14)
-        --oneDayPassportQuantity;
+        oneDayPassportQuantity--;
         addSalesProceeds(ONE_DAY_PRICE);
-        return new Ticket(ONE_DAY_PRICE);
+        return new Ticket(ONE_DAY_PRICE, 1, false);
     }
 
-    // TODO ishiyama @returnを追加で by jflute (2026/10/14)
+    // done ishiyama @returnを追加で by jflute (2026/10/14)
     // #1on1: IDEのフォーマット定義の話まで踏み込んでみた (2026/10/14)
     // .idea, .settings, .vscode
     /**
@@ -115,12 +121,28 @@ public class TicketBooth {
      * @param handedMoney The money (amount) handed over from park guest. (NotNull, NotMinus)
      * @throws TicketSoldOutException When ticket in booth is sold out.
      * @throws TicketShortMoneyException When the specified money is short for purchase.
+     * @return the object that contains information of the ticket you bought and charge.
      */
     public TicketBuyResult buyTwoDayPassport(Integer handedMoney) {
         validatePurchasable(twoDayPassportQuantity, TWO_DAY_PRICE, handedMoney);
         twoDayPassportQuantity--;
         addSalesProceeds(TWO_DAY_PRICE);
-        return new TicketBuyResult(new Ticket(TWO_DAY_PRICE), handedMoney - TWO_DAY_PRICE);
+        return new TicketBuyResult(new Ticket(TWO_DAY_PRICE, 2, false), handedMoney - TWO_DAY_PRICE);
+    }
+
+    public TicketBuyResult buyFourDayPassport(Integer handedMoney) {
+        validatePurchasable(fourDayPassportQuantity, FOUR_DAY_PRICE, handedMoney);
+        fourDayPassportQuantity--;
+        addSalesProceeds(FOUR_DAY_PRICE);
+        return new TicketBuyResult(new Ticket(FOUR_DAY_PRICE, 4, false), handedMoney - FOUR_DAY_PRICE);
+    }
+
+    public TicketBuyResult buyNightOnlyTwoDayPassport(Integer handedMoney) {
+        validatePurchasable(nightOnlyTwoDayPassportQuantity, NIGHT_ONLY_TWO_DAY_PRICE, handedMoney);
+        nightOnlyTwoDayPassportQuantity--;
+        addSalesProceeds(NIGHT_ONLY_TWO_DAY_PRICE);
+        return new TicketBuyResult(
+                new Ticket(NIGHT_ONLY_TWO_DAY_PRICE, 2, true), handedMoney - NIGHT_ONLY_TWO_DAY_PRICE);
     }
 
     /**
@@ -153,21 +175,7 @@ public class TicketBooth {
         }
     }
 
-    // done ishiyama canBeBought() でもいいかな by jflute (2026/10/02)
-    // 戻り値がbooleanな時点で、checkIfのニュアンスがすでに入っている。
-    // さらに、booleanのメソッド名、助動詞よく使われる。(世界的な慣習として)
-    // done ishiyama @throws消し忘れ ($最初validateイメージだった) by jflute (2026/10/02)
-    // TODO ishiyama @returnをぜひ by jflute (2026/10/14)
-    /**
-     * Check if the user can buy the ticket whose price is `price`.
-     * @param handedMoney The money (amount) handed over from park guest. (NotNull, NotMinus)
-     * @param price the price of ticket. (NotNull, NotMinus)
-     */
-    private boolean canBeBought(Integer handedMoney, Integer price) {
-        return handedMoney >= price;
-    }
-
-    // TODO ishiyama 例外宣言の近くに行きたいところ、canBeBought()と入れ替えれば自然とそうなる by jflute (2026/10/14)
+    // done ishiyama 例外宣言の近くに行きたいところ、canBeBought()と入れ替えれば自然とそうなる by jflute (2026/10/14)
     // #1on1: Javaの場合、上から下のものを呼ぶ慣習が強い (2026/10/14)
     // もともとデフォルトのフォーマットとして、publicが上、privateが下というのがある。
     // そこから自然と、上から下のものを呼ぶな感覚になったかも。
@@ -187,6 +195,21 @@ public class TicketBooth {
         if (!canBeBought(handedMoney, ticketPrice)) {
             throw new TicketShortMoneyException("Short money: " + handedMoney);
         }
+    }
+
+    // done ishiyama canBeBought() でもいいかな by jflute (2026/10/02)
+    // 戻り値がbooleanな時点で、checkIfのニュアンスがすでに入っている。
+    // さらに、booleanのメソッド名、助動詞よく使われる。(世界的な慣習として)
+    // done ishiyama @throws消し忘れ ($最初validateイメージだった) by jflute (2026/10/02)
+    // done ishiyama @returnをぜひ by jflute (2026/10/14)
+    /**
+     * Check if the user can buy the ticket whose price is `price`.
+     * @param handedMoney The money (amount) handed over from park guest. (NotNull, NotMinus)
+     * @param price the price of ticket. (NotNull, NotMinus)
+     * @return true if handedMoney is enough to buy the ticket at its price.
+     */
+    private boolean canBeBought(Integer handedMoney, Integer price) {
+        return handedMoney >= price;
     }
 
     // ===================================================================================

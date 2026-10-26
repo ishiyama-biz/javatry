@@ -162,9 +162,9 @@ public class Step05ClassTest extends PlainTestCase {
         TicketBooth booth = new TicketBooth();
         Ticket oneDayPassport = booth.buyOneDayPassport(10000);
         log(oneDayPassport.getDisplayPrice()); // should be same as one-day price
-        log(oneDayPassport.isAlreadyIn()); // should be false
+        log(oneDayPassport.isAvailable()); // should be false
         oneDayPassport.doInPark();
-        log(oneDayPassport.isAlreadyIn()); // should be true
+        log(oneDayPassport.isAvailable()); // should be true
     }
 
     /**
@@ -181,13 +181,21 @@ public class Step05ClassTest extends PlainTestCase {
         log(twoDayPassport.getDisplayPrice() + change); // should be same as money
     }
 
-    // TODO jflute 次回ここから (2026/10/14)
+    // done jflute 次回ここから (2026/10/14)
     /**
      * Now you can use only one in spite of two-day passport, so fix Ticket to be able to handle plural days. <br>
      * (TwoDayPassportなのに一回しか利用できません。複数日数に対応できるようにTicketを修正しましょう)
      */
     public void test_class_moreFix_usePluralDays() {
-        // your confirmation code here
+        TicketBooth booth = new TicketBooth();
+        int handedMoney = 20000;
+        TicketBuyResult buyResult = booth.buyTwoDayPassport(handedMoney);
+        Ticket twoDayPassport = buyResult.getTicket();
+        log(twoDayPassport.isAvailable());
+        twoDayPassport.doInPark();
+        log(twoDayPassport.isAvailable());
+        twoDayPassport.doInPark();
+        log(twoDayPassport.isAvailable());
     }
 
     /**
@@ -196,22 +204,22 @@ public class Step05ClassTest extends PlainTestCase {
      */
     public void test_class_moreFix_whetherTicketType() {
         // uncomment when you implement this exercise
-        //TicketBooth booth = new TicketBooth();
-        //Ticket oneDayPassport = booth.buyOneDayPassport(10000);
-        //showTicketIfNeeds(oneDayPassport);
-        //TicketBuyResult buyResult = booth.buyTwoDayPassport(10000);
-        //Ticket twoDayPassport = buyResult.getTicket();
-        //showTicketIfNeeds(twoDayPassport);
+        TicketBooth booth = new TicketBooth();
+        Ticket oneDayPassport = booth.buyOneDayPassport(10000);
+        showTicketIfNeeds(oneDayPassport);
+        TicketBuyResult buyResult = booth.buyTwoDayPassport(14000);
+        Ticket twoDayPassport = buyResult.getTicket();
+        showTicketIfNeeds(twoDayPassport);
     }
 
     // uncomment when you implement this exercise
-    //private void showTicketIfNeeds(Ticket ticket) {
-    //    if (xxxxxxxxxxxxxxxxxx) { // write determination for two-day passport
-    //        log("two-day passport");
-    //    } else {
-    //        log("other");
-    //    }
-    //}
+    private void showTicketIfNeeds(Ticket ticket) {
+        if (ticket.getInitialUses() == 2) { // write determination for two-day passport
+            log("two-day passport");
+        } else {
+            log("other");
+        }
+    }
 
     // ===================================================================================
     //                                                                           Good Luck
@@ -222,6 +230,9 @@ public class Step05ClassTest extends PlainTestCase {
      */
     public void test_class_moreFix_wonder_four() {
         // your confirmation code here
+        TicketBooth booth = new TicketBooth();
+        Ticket fourDayPassport = booth.buyFourDayPassport(30000).getTicket();
+        log(fourDayPassport.getInitialUses());
     }
 
     /**
@@ -230,7 +241,16 @@ public class Step05ClassTest extends PlainTestCase {
      */
     public void test_class_moreFix_wonder_night() {
         // your confirmation code here
+        TicketBooth booth = new TicketBooth();
+        Ticket nightOnlyPassport = booth.buyNightOnlyTwoDayPassport(30000).getTicket();
+        try{
+            nightOnlyPassport.doInPark();
+            log("入れました。");
+        } catch (RuntimeException exception) {
+            log("まだ入れません。");
+        }
     }
+
 
     // ===================================================================================
     //                                                                         Bonus Stage
@@ -239,6 +259,17 @@ public class Step05ClassTest extends PlainTestCase {
      * Refactor the code to the best readable code you can think of. <br>
      * (自分の中で思う最高に可読性の高いコードにリファクタリングしてみましょう)
      */
+    // リファクタリングは、 public メソッド自体変更しても良いのか？（すでに結構変えてはいるが）
+    // クラスを追加しても良いのか
+    // チケットの種類はこの先もかなり増える想定か
+    // - 増える → チケットの種類を動的に管理
+    // - 増えない → チケットの種類をクラスなど静的なコードとして管理
+    // TicketBooth の扱いがよくわからない。メソッドごとにインスタンス化しているが、本来は 1 つのインスタンスを共有した方がいいのでは？
+    // 基本的にこのクラスの範囲内で TicketBooth が動き、対外的には、払われたお金を int で渡され、チケットのインスタンスと、お釣りを int で返せたらいいということ？
+    //
+    // 実装方針：
+    // Ticket はファクトリー系の実装か、クラスの継承による分割をしたい
+    // デザインパターンを見たけど随分忘れている（https://qiita.com/ichi-naka/items/ee09c9341f85c18f748a）
     public void test_class_moreFix_yourRefactoring() {
         // your confirmation code here
     }

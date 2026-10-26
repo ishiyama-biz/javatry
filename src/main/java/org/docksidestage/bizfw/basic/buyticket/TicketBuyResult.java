@@ -1,17 +1,16 @@
 package org.docksidestage.bizfw.basic.buyticket;
 
-// TODO ishiyama 大事な空行を目立たせるために、些細な空行もしっかり管理する by jflute (2026/10/14)
+// done ishiyama 大事な空行を目立たせるために、些細な空行もしっかり管理する by jflute (2026/10/14)
 // クラスJavaDocの直下の空行、統一性ために削除。意味のない空行は意味のある空行をぼかしてしまう。
 // 意味のない空行はどんどん削除した方が良い。
 /**
  * @author kazuki.ishiyama
  */
-
 public class TicketBuyResult {
-    // TODO ishiyama まあimmutable想定なので、finalを付けてもいいかなと (安全性と可読性のために) by jflute (2026/10/14)
+    // done ishiyama まあimmutable想定なので、finalを付けてもいいかなと (安全性と可読性のために) by jflute (2026/10/14)
     // $久しぶりだった...
-    private Ticket ticket;
-    private Integer change;
+    private final Ticket ticket;
+    private final Integer change;
 
     public TicketBuyResult(Ticket ticket, Integer change) {
         this.ticket = ticket;
