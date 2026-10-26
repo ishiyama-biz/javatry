@@ -214,6 +214,13 @@ public class Step05ClassTest extends PlainTestCase {
 
     // uncomment when you implement this exercise
     private void showTicketIfNeeds(Ticket ticket) {
+        // #1on1: nightOnlyは意図的に含むにしたか？ (2026/10/26)
+        // $nightOnlyは考えれてなかった、ただ意図がわからなかったのでシンプルな実装にした
+        // nightOnlyが出てきた時に「あれ？さっきのシンプルなロジック大丈夫か？」って思えるかどうか？
+        // 「あっそういうことか」の思い出を一度持っておくことが大事。
+        // 手練になると、nightOnlyTwoDayが出てきた瞬間に危ないって思う。
+        // TODO ishiyama せっかくなので、nightOnlyは含めない判定にしましょう by jflute (2026/10/26)
+        // 今後あらゆる種類のチケットが出てきても「(純粋な)TwoDayPassport」だけがtrueになるように。
         if (ticket.getInitialUses() == 2) { // write determination for two-day passport
             log("two-day passport");
         } else {
@@ -243,14 +250,14 @@ public class Step05ClassTest extends PlainTestCase {
         // your confirmation code here
         TicketBooth booth = new TicketBooth();
         Ticket nightOnlyPassport = booth.buyNightOnlyTwoDayPassport(30000).getTicket();
-        try{
+        // TODO ishiyama 修行++: UnitTestがテスト実行時間に依存しているのをどうにかしたい by jflute (2026/10/26)
+        try {
             nightOnlyPassport.doInPark();
             log("入れました。");
         } catch (RuntimeException exception) {
             log("まだ入れません。");
         }
     }
-
 
     // ===================================================================================
     //                                                                         Bonus Stage
@@ -270,6 +277,7 @@ public class Step05ClassTest extends PlainTestCase {
     // 実装方針：
     // Ticket はファクトリー系の実装か、クラスの継承による分割をしたい
     // デザインパターンを見たけど随分忘れている（https://qiita.com/ichi-naka/items/ee09c9341f85c18f748a）
+    // #1on1: うむ、OKです。既存のコードでデグレがないように注意。 (2026/10/26)
     public void test_class_moreFix_yourRefactoring() {
         // your confirmation code here
     }

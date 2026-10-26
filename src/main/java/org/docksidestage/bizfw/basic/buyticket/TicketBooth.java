@@ -16,6 +16,7 @@
 package org.docksidestage.bizfw.basic.buyticket;
 
 // done ishiyama せっかくなので自分名前を刻みましょう、authorの追加をお願いします by jflute (2026/10/02)
+// #1on1: 現実の世界と仕様を比較すると、TicketBoothの立体感を見えて良い (2026/10/26)
 /**
  * @author jflute
  * @author kazuki.ishiyama
@@ -131,6 +132,13 @@ public class TicketBooth {
     }
 
     public TicketBuyResult buyFourDayPassport(Integer handedMoney) {
+        // TODO ishiyama せめて、お釣りの計算というびじねすろじっくは再利用したいところ by jflute (2026/10/26)
+        // (小さくてもれっきとしたビジネスロジック、計算が間違ったり、変更されたりとか時のために)
+        // #1on1: 一度、最終形のつもりじゃないけどリファクタリングしてみて思考の踊り場を作ると... (2026/10/26)
+        // 次の形が見えてきて、本当にやりたかった最終形が見えていくることも。
+        // プロトタイピングと言えるかな!? (建築家のプロトタイピングの紹介も)
+        // (指の速さのお話も。そういった思考のプロセスを成立させるために、事務的なスピードも必要)
+        // TODO ishiyama 修行++: twoとかfourとかの登場を減らしたい by jflute (2026/10/26)
         validatePurchasable(fourDayPassportQuantity, FOUR_DAY_PRICE, handedMoney);
         fourDayPassportQuantity--;
         addSalesProceeds(FOUR_DAY_PRICE);
@@ -141,8 +149,7 @@ public class TicketBooth {
         validatePurchasable(nightOnlyTwoDayPassportQuantity, NIGHT_ONLY_TWO_DAY_PRICE, handedMoney);
         nightOnlyTwoDayPassportQuantity--;
         addSalesProceeds(NIGHT_ONLY_TWO_DAY_PRICE);
-        return new TicketBuyResult(
-                new Ticket(NIGHT_ONLY_TWO_DAY_PRICE, 2, true), handedMoney - NIGHT_ONLY_TWO_DAY_PRICE);
+        return new TicketBuyResult(new Ticket(NIGHT_ONLY_TWO_DAY_PRICE, 2, true), handedMoney - NIGHT_ONLY_TWO_DAY_PRICE);
     }
 
     /**

@@ -40,7 +40,13 @@ public class Ticket {
     //                                                                         ===========
     public Ticket(int displayPrice, int initialUses, boolean isOnlyNight) {
         this.displayPrice = displayPrice;
+        // TODO ishiyama あんまり現場でやらない書き方なので、やらない方が無難かも!? by jflute (2026/10/26)
+        // 文法的には正しいけど、残念ながらほぼ見かけないというところがあって...
+        // レアなのかレアじゃないのかは人によるが...
+        // (会社のプログラミングとOSSの自分のプログラミングの違いも)
         this.remainingUses = this.initialUses = initialUses;
+        // TODO ishiyama 英語の文法的な正しさは置いておいて、nightOnly/onlyNightの業務用語は統一した方が良い by jflute (2026/10/26)
+        // (英語の表現的に自然だからってことで変えるのはOKだけど、特になければ合わせた方が良い)
         this.isOnlyNight = isOnlyNight;
     }
 
@@ -72,8 +78,14 @@ public class Ticket {
         return displayPrice;
     }
 
-    public int getInitialUses() { return initialUses; }
+    public int getInitialUses() {
+        return initialUses;
+    }
 
+    // TODO ishiyama もうAccessor感じゃなくロジック感あるので、定義位置もAccessorの外へ by jflute (2026/10/26)
+    // #1on1: $alreadyIn → invalid → (nightOnlyで変) → available (逆になった) (2026/10/26)
+    // 実装は合ってたので、名前が逆転しちゃっていただけ。
+    // TODO ishiyama 意味を正しましょう by jflute (2026/10/26)
     public boolean isAvailable() {
         return remainingUses <= 0;
     }
